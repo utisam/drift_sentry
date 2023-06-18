@@ -1,0 +1,11 @@
+targets:
+  $default:
+    builders:
+      drift_dev:
+        generate_for:
+          include:
+            - example/database.dart
+      mockito|mockBuilder:
+        generate_for:
+          include:
+            - 'test/mocks/**.dart'
