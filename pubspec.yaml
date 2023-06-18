@@ -1,6 +1,6 @@
 name: drift_sentry
 description: Sentry integration for the drift package.
-version: 1.0.0
+version: 1.0.1
 repository: https://github.com/utisam/drift_sentry/
 issue_tracker: https://github.com/utisam/drift_sentry/issues
 
@@ -12,7 +12,6 @@ dependencies:
   meta: ^1.9.1
   mockito: ^5.4.2
   sentry: ^7.7.0
-  sqlite3_flutter_libs: ^0.5.15
 
 dev_dependencies:
   dart_flutter_team_lints: ^1.0.0
