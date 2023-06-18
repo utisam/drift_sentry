@@ -50,6 +50,7 @@ Future<void> _run() async {
   } catch (exception) {
     transaction.throwable = exception;
     transaction.status = const SpanStatus.internalError();
+    rethrow;
   } finally {
     await transaction.finish();
   }
