@@ -1,5 +1,8 @@
 # Drift Sentry
 
+[![CI](https://github.com/utisam/drift_sentry/actions/workflows/ci.yml/badge.svg)](https://github.com/utisam/drift_sentry/actions/workflows/ci.yml)
+[![pub package](https://img.shields.io/pub/v/drift_sentry.svg)](https://pub.dev/packages/drift_sentry)
+
 [Sentry](https://sentry.io/) integration for the [drift](https://pub.dev/packages/drift) package.
 
 ## Usage
