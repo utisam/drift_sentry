@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
-import 'package:drift_sentry/drift_sentry.dart';
 import 'package:meta/meta.dart';
 import 'package:sentry/sentry.dart';
+import '../drift_sentry.dart';
 
 class SentryTransactionExecutor extends SentryQueryExecutor<TransactionExecutor>
     implements TransactionExecutor {
@@ -14,7 +14,7 @@ class SentryTransactionExecutor extends SentryQueryExecutor<TransactionExecutor>
   @override
   Future<void> rollback() async {
     try {
-      executor.rollback();
+      await executor.rollback();
     } finally {
       parentSpan?.status = const SpanStatus.aborted();
       await parentSpan?.finish();
@@ -24,7 +24,7 @@ class SentryTransactionExecutor extends SentryQueryExecutor<TransactionExecutor>
   @override
   Future<void> send() async {
     try {
-      executor.send();
+      await executor.send();
     } finally {
       parentSpan?.status = const SpanStatus.ok();
       await parentSpan?.finish();

@@ -1,3 +1,4 @@
+/// Sentry integration for the drift package.
 library drift_sentry;
 
 export 'src/sentry_executor.dart';

@@ -1,6 +1,6 @@
 # Drift Sentry
 
-Integration for the [drift](https://pub.dev/packages/drift) package.
+[Sentry](https://sentry.io/) integration for the [drift](https://pub.dev/packages/drift) package.
 
 ## Usage
 

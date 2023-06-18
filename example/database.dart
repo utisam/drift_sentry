@@ -10,7 +10,7 @@ class Products extends Table {
 
 @DriftDatabase(tables: [Products])
 class ExampleDatabase extends _$ExampleDatabase {
-  ExampleDatabase(QueryExecutor queryExecutor) : super(queryExecutor);
+  ExampleDatabase(super.queryExecutor);
 
   @override
   int get schemaVersion => 1;

@@ -1,7 +1,8 @@
 import 'package:drift/drift.dart';
-import 'package:drift_sentry/drift_sentry.dart';
 import 'package:meta/meta.dart';
 import 'package:sentry/sentry.dart';
+
+import '../drift_sentry.dart';
 
 class SentryQueryExecutor<E extends QueryExecutor> implements QueryExecutor {
   @protected
@@ -29,34 +30,44 @@ class SentryQueryExecutor<E extends QueryExecutor> implements QueryExecutor {
 
   @override
   Future<int> runInsert(String statement, List<Object?> args) =>
-      _withAsyncChildSpan(() {
-        return executor.runInsert(statement, args);
-      }, 'db.sql.execute', description: '$statement $args');
+      _withAsyncChildSpan(
+        () => executor.runInsert(statement, args),
+        'db.sql.execute',
+        description: '$statement $args',
+      );
 
   @override
   Future<List<Map<String, Object?>>> runSelect(
           String statement, List<Object?> args) =>
-      _withAsyncChildSpan(() {
-        return executor.runSelect(statement, args);
-      }, 'db.sql.query', description: '$statement $args');
+      _withAsyncChildSpan(
+        () => executor.runSelect(statement, args),
+        'db.sql.query',
+        description: '$statement $args',
+      );
 
   @override
   Future<int> runUpdate(String statement, List<Object?> args) =>
-      _withAsyncChildSpan(() {
-        return executor.runUpdate(statement, args);
-      }, 'db.sql.execute', description: '$statement $args');
+      _withAsyncChildSpan(
+        () => executor.runUpdate(statement, args),
+        'db.sql.execute',
+        description: '$statement $args',
+      );
 
   @override
   Future<int> runDelete(String statement, List<Object?> args) =>
-      _withAsyncChildSpan(() {
-        return executor.runDelete(statement, args);
-      }, 'db.sql.execute', description: '$statement $args');
+      _withAsyncChildSpan(
+        () => executor.runDelete(statement, args),
+        'db.sql.execute',
+        description: '$statement $args',
+      );
 
   @override
   Future<void> runCustom(String statement, [List<Object?>? args]) =>
-      _withAsyncChildSpan(() {
-        return executor.runCustom(statement, args);
-      }, 'db.sql.execute', description: '$statement $args');
+      _withAsyncChildSpan(
+        () => executor.runCustom(statement, args),
+        'db.sql.execute',
+        description: '$statement $args',
+      );
 
   @override
   Future<void> runBatched(BatchedStatements statements) {
@@ -64,9 +75,8 @@ class SentryQueryExecutor<E extends QueryExecutor> implements QueryExecutor {
         .map((a) => '(${a.statementIndex}, ${a.arguments})')
         .join(', ');
 
-    return _withAsyncChildSpan(() {
-      return executor.runBatched(statements);
-    }, 'db', description: '${statements.statements}, [$pairs]');
+    return _withAsyncChildSpan(() => executor.runBatched(statements), 'db',
+        description: '${statements.statements}, [$pairs]');
   }
 
   @override
