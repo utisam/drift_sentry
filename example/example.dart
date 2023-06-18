@@ -35,7 +35,7 @@ Future<void> _run() async {
 
   final transaction = Sentry.startTransaction(
     'example-transaction',
-    'insert',
+    'db',
     bindToScope: true,
   );
   try {
