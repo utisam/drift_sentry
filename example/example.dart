@@ -30,7 +30,7 @@ void main() async {
 
 Future<void> _run() async {
   final database = ExampleDatabase(
-    SentryQueryExecutor(NativeDatabase.memory()),
+    NativeDatabase.memory().addSentry(),
   );
 
   final transaction = Sentry.startTransaction(

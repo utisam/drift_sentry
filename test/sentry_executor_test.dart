@@ -26,10 +26,9 @@ void main() {
     tracer = SentryTracer(context, hub);
     when(hub.getSpan()).thenReturn(tracer);
 
-    db = ExampleDatabase(SentryQueryExecutor(
-      NativeDatabase.memory(),
-      hub: hub,
-    ));
+    db = ExampleDatabase(
+      NativeDatabase.memory().addSentry(hub: hub),
+    );
   });
   tearDown(() async {
     await db.close();
