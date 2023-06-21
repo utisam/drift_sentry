@@ -4,9 +4,22 @@ import 'package:sentry/sentry.dart';
 
 import '../drift_sentry.dart';
 
+typedef QueryDescriptionExtractor = String? Function(
+  String statement,
+  List<Object?>? args,
+);
+
+typedef BatchDescriptionExtractor = String? Function(
+  BatchedStatements statements,
+);
+
 class SentryQueryExecutor<E extends QueryExecutor> implements QueryExecutor {
   @protected
   final E executor;
+
+  final QueryDescriptionExtractor _queryDescriptionExtractor;
+
+  final BatchDescriptionExtractor _batchDescriptionExtractor;
 
   @protected
   final ISentrySpan? parentSpan;
@@ -15,9 +28,15 @@ class SentryQueryExecutor<E extends QueryExecutor> implements QueryExecutor {
 
   SentryQueryExecutor(
     this.executor, {
+    QueryDescriptionExtractor queryDescriptionExtractor =
+        _defaultQueryDescriptionExtractor,
+    BatchDescriptionExtractor batchDescriptionExtractor =
+        _defaultBatchDescriptionExtractor,
     @internal this.parentSpan,
     @internal Hub? hub,
-  }) : _hub = hub ?? HubAdapter();
+  })  : _queryDescriptionExtractor = queryDescriptionExtractor,
+        _batchDescriptionExtractor = batchDescriptionExtractor,
+        _hub = hub ?? HubAdapter();
 
   @override
   SqlDialect get dialect => executor.dialect;
@@ -33,7 +52,7 @@ class SentryQueryExecutor<E extends QueryExecutor> implements QueryExecutor {
       _withAsyncChildSpan(
         () => executor.runInsert(statement, args),
         'db.sql.execute',
-        description: '$statement $args',
+        description: _queryDescriptionExtractor(statement, args),
       );
 
   @override
@@ -42,7 +61,7 @@ class SentryQueryExecutor<E extends QueryExecutor> implements QueryExecutor {
       _withAsyncChildSpan(
         () => executor.runSelect(statement, args),
         'db.sql.query',
-        description: '$statement $args',
+        description: _queryDescriptionExtractor(statement, args),
       );
 
   @override
@@ -50,7 +69,7 @@ class SentryQueryExecutor<E extends QueryExecutor> implements QueryExecutor {
       _withAsyncChildSpan(
         () => executor.runUpdate(statement, args),
         'db.sql.execute',
-        description: '$statement $args',
+        description: _queryDescriptionExtractor(statement, args),
       );
 
   @override
@@ -58,7 +77,7 @@ class SentryQueryExecutor<E extends QueryExecutor> implements QueryExecutor {
       _withAsyncChildSpan(
         () => executor.runDelete(statement, args),
         'db.sql.execute',
-        description: '$statement $args',
+        description: _queryDescriptionExtractor(statement, args),
       );
 
   @override
@@ -66,18 +85,15 @@ class SentryQueryExecutor<E extends QueryExecutor> implements QueryExecutor {
       _withAsyncChildSpan(
         () => executor.runCustom(statement, args),
         'db.sql.execute',
-        description: '$statement $args',
+        description: _queryDescriptionExtractor(statement, args),
       );
 
   @override
-  Future<void> runBatched(BatchedStatements statements) {
-    final pairs = statements.arguments
-        .map((a) => '(${a.statementIndex}, ${a.arguments})')
-        .join(', ');
-
-    return _withAsyncChildSpan(() => executor.runBatched(statements), 'db',
-        description: '${statements.statements}, [$pairs]');
-  }
+  Future<void> runBatched(BatchedStatements statements) => _withAsyncChildSpan(
+        () => executor.runBatched(statements),
+        'db',
+        description: _batchDescriptionExtractor(statements),
+      );
 
   @override
   TransactionExecutor beginTransaction() {
@@ -115,4 +131,17 @@ class SentryQueryExecutor<E extends QueryExecutor> implements QueryExecutor {
       await span?.finish();
     }
   }
+}
+
+String? _defaultQueryDescriptionExtractor(
+  String statement,
+  List<Object?>? args,
+) =>
+    '$statement $args';
+
+String? _defaultBatchDescriptionExtractor(BatchedStatements statements) {
+  final pairs = statements.arguments
+      .map((a) => '(${a.statementIndex}, ${a.arguments})')
+      .join(', ');
+  return '${statements.statements} [$pairs]';
 }
