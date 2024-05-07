@@ -6,7 +6,7 @@
 
 ## 1.0.1
 
-* Remove depencency for flutter
+* Remove dependency for flutter
 
 ## 1.0.0
 
