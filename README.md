@@ -1,5 +1,9 @@
 # Drift Sentry
 
+> [!NOTE]
+> The official package [sentry_drift](https://pub.dev/packages/sentry_drift) has been released.
+> Please use this for new projects.
+
 [![CI](https://github.com/utisam/drift_sentry/actions/workflows/ci.yml/badge.svg)](https://github.com/utisam/drift_sentry/actions/workflows/ci.yml)
 [![pub package](https://img.shields.io/pub/v/drift_sentry.svg)](https://pub.dev/packages/drift_sentry)
 

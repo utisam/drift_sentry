@@ -1,6 +1,6 @@
 name: drift_sentry
-description: Sentry integration for the drift package.
-version: 2.0.0
+description: An integration which adds support for performance tracing for the Drift package.
+version: 2.0.1
 repository: https://github.com/utisam/drift_sentry/
 issue_tracker: https://github.com/utisam/drift_sentry/issues
 
